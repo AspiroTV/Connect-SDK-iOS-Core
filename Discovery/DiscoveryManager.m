@@ -25,6 +25,14 @@
 
 #import "ConnectSDKDefaultPlatforms.h"
 
+#import "CastDiscoveryProvider.h"
+#import "SSDPDiscoveryProvider.h"
+#import "ZeroConfDiscoveryProvider.h"
+
+#import "CastService.h"
+#import "AirPlayService.h"
+#import "RokuService.h"
+#import "WebOSTVService.h"
 #import "DLNAService.h"
 #import "NetcastTVService.h"
 
@@ -118,7 +126,9 @@
         _deviceClasses = [[NSMutableDictionary alloc] init];
 
         _allDevices = [[NSMutableDictionary alloc] init];
+        [self ha_addUsersDeviceToAllDevices];
         _compatibleDevices = [[NSMutableDictionary alloc] init];
+		[self ha_addUsersDeviceToCompatibleDevices];
 
         _appStateChangeNotifier = stateNotifier ?: [AppStateChangeNotifier new];
         __weak typeof(self) wself = self;
@@ -137,18 +147,67 @@
     return self;
 }
 
+- (void)ha_addUsersDeviceToAllDevices {
+    ServiceDescription *serviceDescription = [ServiceDescription descriptionWithAddress:@"kUsersDeviceAddress" UUID:@"kUsersDeviceID"];
+	serviceDescription.serviceId = @"kUsersDeviceServiceId";
+    serviceDescription.friendlyName = [UIDevice currentDevice].name;
+	serviceDescription.castingName = @"device_cast";
+    serviceDescription.port = 0;
+    serviceDescription.manufacturer = @"Apple";
+    serviceDescription.modelName = [UIDevice currentDevice].model;
+    
+    ConnectableDevice *device;
+    device = [ConnectableDevice connectableDeviceWithDescription:serviceDescription];
+    @synchronized (_allDevices) { [_allDevices setObject:device forKey:serviceDescription.address]; }
+}
+
+- (void)ha_addUsersDeviceToCompatibleDevices {
+    ConnectableDevice *device;
+    @synchronized (_allDevices) { device = [_allDevices objectForKey:@"kUsersDeviceAddress"]; }
+    @synchronized (_compatibleDevices) { [_compatibleDevices setValue:device forKey:device.address]; }
+}
+
 #pragma mark - Setup & Registration
 
 - (void) registerDefaultServices
 {
-    NSDictionary *defaultPlatforms = kConnectSDKDefaultPlatforms;
-    
-    [defaultPlatforms enumerateKeysAndObjectsUsingBlock:^(NSString *platformClassName, NSString *discoveryProviderClassName, BOOL *stop) {
-        Class platformClass = NSClassFromString(platformClassName);
-        Class discoveryProviderClass = NSClassFromString(discoveryProviderClassName);
-        
-        [self registerDeviceService:platformClass withDiscovery:discoveryProviderClass];
-    }];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary *filter = [defaults objectForKey:@"casting"];
+    if (filter) {
+        if ([[defaults valueForKeyPath:@"casting.chromecast"] boolValue]) {
+            [self registerDeviceService:[CastService class] withDiscovery:[CastDiscoveryProvider class]];
+        }
+        if ([[defaults valueForKeyPath:@"casting.airties"] boolValue]) {
+//            [self registerDeviceService:[AirTiesService class] withDiscovery:[SSDPDiscoveryProvider class]];
+        }
+        if ([[defaults valueForKeyPath:@"casting.airplay"] boolValue]) {
+            [self registerDeviceService:[AirPlayService class] withDiscovery:[ZeroConfDiscoveryProvider class]];
+        }
+        if ([[defaults valueForKeyPath:@"casting.dial"] boolValue]) {
+            [self registerDeviceService:[DIALService class] withDiscovery:[SSDPDiscoveryProvider class]];
+        }
+        if ([[defaults valueForKeyPath:@"casting.roku"] boolValue]) {
+            [self registerDeviceService:[RokuService class] withDiscovery:[SSDPDiscoveryProvider  class]];
+        }
+        if ([[defaults valueForKeyPath:@"casting.dlna"] boolValue]) {
+            [self registerDeviceService:[DLNAService class] withDiscovery:[SSDPDiscoveryProvider class]];
+        }
+        if ([[defaults valueForKeyPath:@"casting.netcasttv"] boolValue]) {
+            [self registerDeviceService:[NetcastTVService class] withDiscovery:[SSDPDiscoveryProvider class]];
+        }
+        if ([[defaults valueForKeyPath:@"casting.webostv"] boolValue]) {
+            [self registerDeviceService:[WebOSTVService class] withDiscovery:[SSDPDiscoveryProvider class]];
+        }
+    } else {
+		NSDictionary *defaultPlatforms = kConnectSDKDefaultPlatforms;
+		
+		[defaultPlatforms enumerateKeysAndObjectsUsingBlock:^(NSString *platformClassName, NSString *discoveryProviderClassName, BOOL *stop) {
+			Class platformClass = NSClassFromString(platformClassName);
+			Class discoveryProviderClass = NSClassFromString(discoveryProviderClassName);
+			
+			[self registerDeviceService:platformClass withDiscovery:discoveryProviderClass];
+		}];
+    }
 }
 
 - (void) registerDeviceService:(Class)deviceClass withDiscovery:(Class)discoveryClass
@@ -294,13 +353,15 @@
 {
     [self.compatibleDevices enumerateKeysAndObjectsUsingBlock:^(id key, ConnectableDevice *device, BOOL *stop)
     {
-        [device disconnect];
-        
-        if (self.delegate)
-            [self.delegate discoveryManager:self didLoseDevice:device];
-
-        if (self.devicePicker)
-            [self.devicePicker discoveryManager:self didLoseDevice:device];
+		if (![device.serviceDescription.serviceId isEqualToString:@"kUsersDeviceServiceId"]) { //no need to delete users device from list
+			[device disconnect];
+			
+			if (self.delegate)
+				[self.delegate discoveryManager:self didLoseDevice:device];
+			
+			if (self.devicePicker)
+				[self.devicePicker discoveryManager:self didLoseDevice:device];
+		}
     }];
     
     [_discoveryProviders enumerateObjectsUsingBlock:^(DiscoveryProvider *provider, NSUInteger idx, BOOL *stop) {
@@ -309,7 +370,9 @@
     }];
 
     _allDevices = [NSMutableDictionary new];
+    [self ha_addUsersDeviceToAllDevices];
     _compatibleDevices = [NSMutableDictionary new];
+    [self ha_addUsersDeviceToCompatibleDevices];
 }
 
 #pragma mark - Capability Filtering
@@ -328,7 +391,8 @@
     }
 
     _compatibleDevices = [[NSMutableDictionary alloc] init];
-
+    [self ha_addUsersDeviceToCompatibleDevices];
+    
     NSArray *allDevices;
 
     @synchronized (_allDevices) { allDevices = [_allDevices allValues]; }
@@ -397,6 +461,8 @@
         return;
 
     @synchronized (_compatibleDevices) { [_compatibleDevices setValue:device forKey:device.address]; }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"kCastDeviceAvailabilityChanged" object:nil];
 
     if (self.delegate)
         [self.delegate discoveryManager:self didFindDevice:device];
@@ -414,6 +480,8 @@
         @synchronized (_compatibleDevices) {
             if ([_compatibleDevices objectForKey:device.address])
             {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"kCastDeviceAvailabilityChanged" object:nil];
+                
                 if (self.delegate)
                     [self.delegate discoveryManager:self didUpdateDevice:device];
 
@@ -434,6 +502,8 @@
 
 - (void) handleDeviceLoss:(ConnectableDevice *)device
 {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"kCastDeviceAvailabilityChanged" object:nil];
+    
     if (self.delegate)
         [self.delegate discoveryManager:self didLoseDevice:device];
 
@@ -703,17 +773,21 @@
 
 - (DevicePicker *) devicePicker
 {
-    if (_currentPicker == nil)
-    {
-        _currentPicker = [[DevicePicker alloc] init];
-        
-        [self.compatibleDevices enumerateKeysAndObjectsUsingBlock:^(NSString *address, ConnectableDevice *device, BOOL *stop)
-        {
-            [_currentPicker discoveryManager:self didFindDevice:device];
-        }];
-    }
-    
     return _currentPicker;
+}
+
+- (void)setDevicePicker:(DevicePicker *)devicePicker {
+	_currentPicker = devicePicker;
+	[self.compatibleDevices enumerateKeysAndObjectsUsingBlock:^(NSString *address, ConnectableDevice *device, BOOL *stop)
+	 {
+		 [_currentPicker discoveryManager:self didFindDevice:device];
+	 }];
+}
+
+- (void)removeDevicePicker {
+    if (_currentPicker != nil) {
+        _currentPicker = nil;
+    }
 }
 
 #pragma mark - ServiceConfigDelegate

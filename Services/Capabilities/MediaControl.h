@@ -58,8 +58,18 @@ typedef enum {
     MediaControlPlayStatePlaying,
     MediaControlPlayStatePaused,
     MediaControlPlayStateBuffering,
-    MediaControlPlayStateFinished
+    MediaControlPlayStateFinished,
+    MediaControlPlayStateParsing,
+    MediaControlPlayStateError
 } MediaControlPlayState;
+
+typedef NS_ENUM(NSInteger, MediaControlIdleReason) {
+	MediaControlIdleReasonNone = 0,
+	MediaControlIdleReasonFinished = 1,
+	MediaControlIdleReasonCancelled = 2,
+	MediaControlIdleReasonInterrupted = 3,
+	MediaControlIdleReasonError = 4,
+};
 
 @protocol MediaControl <NSObject>
 
@@ -69,6 +79,7 @@ typedef enum {
  * @param playState Play state of the current media file
  */
 typedef void (^ MediaPlayStateSuccessBlock)(MediaControlPlayState playState);
+typedef void (^ MediaPlayStateWithReasonSuccessBlock)(MediaControlPlayState playState, MediaControlIdleReason idleReason);
 
 /*!
  * Success block that is called upon successfully getting the media file's current playhead position.
@@ -103,6 +114,9 @@ typedef void (^ MediaDurationSuccessBlock)(NSTimeInterval duration);
 - (void)getMediaMetaDataWithSuccess:(SuccessBlock)success failure:(FailureBlock)failure;
 
 - (void) getPlayStateWithSuccess:(MediaPlayStateSuccessBlock)success failure:(FailureBlock)failure;
+@optional
+- (void)getPlayStateWithReasonWithSuccess:(MediaPlayStateWithReasonSuccessBlock)success failure:(FailureBlock)failure;
+
 - (ServiceSubscription *)subscribePlayStateWithSuccess:(MediaPlayStateSuccessBlock)success failure:(FailureBlock)failure;
 - (ServiceSubscription *)subscribeMediaInfoWithSuccess:(SuccessBlock)success failure:(FailureBlock)failure;
 

@@ -105,6 +105,7 @@
 
 /*! Enumerates through all DeviceServices and attempts to disconnect from each of them. */
 - (void) disconnect;
+- (void) disconnectAndStopApplication;
 
 /*! Whether the device has any DeviceServices that require an active connection (websocket, HTTP registration, etc) */
 @property (nonatomic, readonly) BOOL isConnectable;

@@ -24,6 +24,7 @@
 #import "MediaControl.h"
 #import "MediaInfo.h"
 #import "MediaLaunchObject.h"
+#import "HACastContentDetails.h"
 
 #define kMediaPlayerAny @"MediaPlayer.Any"
 
@@ -108,5 +109,12 @@ __deprecated_msg("Please use playMediaWithMediaInfo:shouldLoop:success:failure: 
            success:(MediaPlayerDisplaySuccessBlock)success
            failure:(FailureBlock)failure
 __deprecated_msg("Please use playMediaWithMediaInfo:shouldLoop:success:failure: instead");
+
+@optional
+- (void)playMedia:(NSURL *)mediaURL
+   contentDetails:(HACastContentDetails *)contentDetails
+		 position:(NSTimeInterval)position
+		  success:(MediaPlayerSuccessBlock)success
+		  failure:(FailureBlock)failure;
 
 @end

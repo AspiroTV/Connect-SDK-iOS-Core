@@ -248,6 +248,8 @@ static BOOL _shouldDisconnectOnBackground = YES;
 - (void) connect { }
 - (void) disconnect { }
 
+- (void) disconnectAndTerminateApplication { }
+
 # pragma mark - Pairing
 
 - (BOOL) requiresPairing

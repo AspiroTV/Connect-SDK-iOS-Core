@@ -60,6 +60,7 @@
  * @param webAppSession Object containing important information about the web app's session. This object is required to perform many functions with the web app, including app-to-app communication, media playback, closing, etc.
  */
 typedef void (^ WebAppLaunchSuccessBlock)(WebAppSession *webAppSession);
+typedef void (^ WebAppJoinCastingSuccessBlock)(id<MediaControl> mediaControl);
 
 - (id<WebAppLauncher>) webAppLauncher;
 - (CapabilityPriorityLevel) webAppLauncherPriority;
@@ -89,4 +90,7 @@ typedef void (^ WebAppLaunchSuccessBlock)(WebAppSession *webAppSession);
 - (void) isWebAppPinned:(NSString *)webAppId success:(WebAppPinStatusBlock)success failure:(FailureBlock)failure;
 
 - (ServiceSubscription *)subscribeIsWebAppPinned:(NSString*)webAppId success:(WebAppPinStatusBlock)success failure:(FailureBlock)failure;
+
+@optional
+- (void)joinCastingApp:(WebAppJoinCastingSuccessBlock)success failure:(FailureBlock)failure;
 @end

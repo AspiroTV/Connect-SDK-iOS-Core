@@ -223,6 +223,24 @@
     dispatch_on_main(^{ [self.delegate connectableDeviceDisconnected:self withError:nil]; });
 }
 
+- (void) disconnectAndStopApplication
+{
+	[_services enumerateKeysAndObjectsUsingBlock:^(id key, DeviceService *service, BOOL *stop)
+	 {
+		 if (service.connected) {
+			 if ([service respondsToSelector:@selector(disconnectAndTerminateApplication)]) {
+				 [service disconnectAndTerminateApplication];
+			 } else {
+				 [service disconnect];
+			 }
+		 }
+	 }];
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:kConnectSDKWirelessSSIDChanged object:nil];
+	
+	dispatch_on_main(^{ [self.delegate connectableDeviceDisconnected:self withError:nil]; });
+}
+
 - (BOOL) isConnectable
 {
     __block BOOL connectable = NO;
@@ -367,9 +385,15 @@
 {
     if (serviceDescription.address)
         _consolidatedServiceDescription.address = serviceDescription.address;
+	
+	if (serviceDescription.serviceId)		//added for detection AirPlay HTTP
+		_consolidatedServiceDescription.serviceId = serviceDescription.serviceId;
 
     if (serviceDescription.friendlyName)
         _consolidatedServiceDescription.friendlyName = serviceDescription.friendlyName;
+	
+	if (serviceDescription.castingName)
+		_consolidatedServiceDescription.castingName = serviceDescription.castingName;
 
     if (serviceDescription.modelName)
         _consolidatedServiceDescription.modelName = serviceDescription.modelName;

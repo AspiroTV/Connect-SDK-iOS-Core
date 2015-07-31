@@ -266,6 +266,7 @@
 
     ServiceDescription *serviceDescription = [ServiceDescription descriptionWithAddress:address UUID:sender.name];
     serviceDescription.friendlyName = sender.name;
+	serviceDescription.castingName = @"airplay_cast";
     serviceDescription.serviceId = serviceId;
     serviceDescription.port = (NSUInteger) port;
     serviceDescription.UUID = UUID;

@@ -366,6 +366,57 @@
     } failure:failure];
 }
 
+- (void) playMedia:(NSURL *)mediaURL contentDetails:(HACastContentDetails *)contentDetails position:(NSTimeInterval)position success:(MediaPlayerSuccessBlock)success failure:(FailureBlock)failure
+{
+	_assetId = [[CTGuid randomGuid] stringValue];
+	
+	NSMutableDictionary *plist = [NSMutableDictionary new];
+	plist[@"Content-Location"] = mediaURL.absoluteString;
+	if (position > 1) {
+		plist[@"Start-Position"] = @(position);
+	} else {
+		plist[@"Start-Position"] = @(0.0);
+	}
+	
+	NSError *parseError;
+	NSData *plistData = [NSPropertyListSerialization dataWithPropertyList:plist format:NSPropertyListBinaryFormat_v1_0 options:0 error:&parseError];
+	
+	if (parseError || !plistData)
+	{
+		NSError *error = parseError;
+		
+		if (!error)
+			error = [ConnectError generateErrorWithCode:ConnectStatusCodeError andDetails:@"Error occurred while parsing property list"];
+		
+		if (failure)
+			failure(error);
+		
+		return;
+	}
+	
+	NSString *commandPathComponent = @"play";
+	NSURL *commandURL = [self.service.serviceDescription.commandURL URLByAppendingPathComponent:commandPathComponent];
+	
+	ServiceCommand *command = [ServiceCommand commandWithDelegate:self target:commandURL payload:plist];
+	command.HTTPMethod = @"POST";
+	command.callbackComplete = ^(id responseObject) {
+		LaunchSession *launchSession = [LaunchSession launchSessionForAppId:commandPathComponent];
+		launchSession.sessionType = LaunchSessionTypeMedia;
+		launchSession.service = self.service;
+		launchSession.sessionId = self.sessionId;
+		
+		if (success) {
+			dispatch_on_main(^{
+				MediaLaunchObject *launchObject = [[MediaLaunchObject alloc] initWithLaunchSession:launchSession andMediaControl:self.service.mediaControl];
+				success(launchObject);
+			});
+		}
+	};
+	command.callbackError = failure;
+	
+	[command send];
+}
+
 - (void) playMedia:(MediaInfo *)mediaInfo shouldLoop:(BOOL)shouldLoop success:(MediaPlayerDisplaySuccessBlock)success failure:(FailureBlock)failure
 {
     NSURL *iconURL;

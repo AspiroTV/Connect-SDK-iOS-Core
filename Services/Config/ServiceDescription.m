@@ -58,6 +58,7 @@
         self.type = dict[@"serviceId"];
         self.version = dict[@"version"];
         self.friendlyName = dict[@"friendlyName"];
+		self.castingName = dict[@"castingName"];
         self.manufacturer = dict[@"manufacturer"];
         self.modelName = dict[@"modelName"];
         self.modelDescription = dict[@"modelDescription"];
@@ -102,6 +103,7 @@
     serviceDescription.type = [self.type copy];
     serviceDescription.version = [self.version copy];
     serviceDescription.friendlyName = [self.friendlyName copy];
+	serviceDescription.castingName = [self.castingName copy];
     serviceDescription.manufacturer = [self.manufacturer copy];
     serviceDescription.modelName = [self.modelName copy];
     serviceDescription.modelDescription = [self.modelDescription copy];

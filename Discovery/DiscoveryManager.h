@@ -152,6 +152,8 @@
  * @return DevicePicker DevicePicker singleton for use in picking devices
  */
 - (DevicePicker*) devicePicker;
+- (void)setDevicePicker:(DevicePicker *)devicePicker;
+- (void)removeDevicePicker;
 
 #pragma mark - Device Store
 
