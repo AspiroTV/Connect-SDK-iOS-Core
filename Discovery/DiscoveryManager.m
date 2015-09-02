@@ -148,9 +148,11 @@
 }
 
 - (void)ha_addUsersDeviceToAllDevices {
+	NSString *deviceName = [[NSUserDefaults standardUserDefaults] objectForKey:@"deviceFriendlyName"];
+	
     ServiceDescription *serviceDescription = [ServiceDescription descriptionWithAddress:@"kUsersDeviceAddress" UUID:@"kUsersDeviceID"];
 	serviceDescription.serviceId = @"kUsersDeviceServiceId";
-    serviceDescription.friendlyName = [UIDevice currentDevice].name;
+	serviceDescription.friendlyName = deviceName;
 	serviceDescription.castingName = @"device_cast";
     serviceDescription.port = 0;
     serviceDescription.manufacturer = @"Apple";
