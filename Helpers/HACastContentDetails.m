@@ -15,6 +15,8 @@
 @property (nonatomic, copy, readwrite) NSString *contentDescription;
 @property (nonatomic, copy, readwrite) NSString *contentImage;
 
+@property (nonatomic, copy, readwrite) NSString *uuid;
+@property (nonatomic, copy, readwrite) NSString *friendlyName;
 @property (nonatomic, copy, readwrite) NSString *sessionId;
 @property (nonatomic, copy, readwrite) NSString *encryptedUsername;
 @property (nonatomic, copy, readwrite) NSString *encryptedPassword;
@@ -29,6 +31,8 @@
 					 title:(NSString *)contentTitle
 			   description:(NSString *)contentDescription
 					 image:(NSString *)contentImage
+					  uuid:(NSString *)uuid
+			  friendlyName:(NSString *)friendlyName
 				 sessionId:(NSString *)sessionId
 				  username:(NSString *)encryptedUsername
 				  password:(NSString *)encryptedPassword
@@ -39,6 +43,8 @@
 		_contentTitle = contentTitle;
 		_contentDescription = contentDescription;
 		_contentImage = contentImage;
+		_uuid = uuid;
+		_friendlyName = friendlyName;
 		_sessionId = sessionId;
 		_encryptedUsername = encryptedUsername;
 		_encryptedPassword = encryptedPassword;

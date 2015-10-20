@@ -15,6 +15,8 @@
 @property (nonatomic, copy, readonly) NSString *contentDescription;
 @property (nonatomic, copy, readonly) NSString *contentImage;
 
+@property (nonatomic, copy, readonly) NSString *uuid;
+@property (nonatomic, copy, readonly) NSString *friendlyName;
 @property (nonatomic, copy, readonly) NSString *sessionId;
 @property (nonatomic, copy, readonly) NSString *encryptedUsername;
 @property (nonatomic, copy, readonly) NSString *encryptedPassword;
@@ -25,6 +27,8 @@
 					 title:(NSString *)contentTitle
 			   description:(NSString *)contentDescription
 					 image:(NSString *)contentImage
+					  uuid:(NSString *)uuid
+			  friendlyName:(NSString *)friendlyName
 				 sessionId:(NSString *)sessionId
 				  username:(NSString *)encryptedUsername
 				  password:(NSString *)encryptedPassword

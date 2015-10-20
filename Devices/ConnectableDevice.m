@@ -388,6 +388,9 @@
 	
 	if (serviceDescription.serviceId)		//added for detection AirPlay HTTP
 		_consolidatedServiceDescription.serviceId = serviceDescription.serviceId;
+	
+	if (serviceDescription.UUID)
+		_consolidatedServiceDescription.UUID = serviceDescription.UUID;
 
     if (serviceDescription.friendlyName)
         _consolidatedServiceDescription.friendlyName = serviceDescription.friendlyName;
