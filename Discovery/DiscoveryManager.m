@@ -126,9 +126,9 @@
         _deviceClasses = [[NSMutableDictionary alloc] init];
 
         _allDevices = [[NSMutableDictionary alloc] init];
-        [self ha_addUsersDeviceToAllDevices];
+//        [self ha_addUsersDeviceToAllDevices];
         _compatibleDevices = [[NSMutableDictionary alloc] init];
-		[self ha_addUsersDeviceToCompatibleDevices];
+//		[self ha_addUsersDeviceToCompatibleDevices];
 
         _appStateChangeNotifier = stateNotifier ?: [AppStateChangeNotifier new];
         __weak typeof(self) wself = self;
@@ -372,9 +372,9 @@
     }];
 
     _allDevices = [NSMutableDictionary new];
-    [self ha_addUsersDeviceToAllDevices];
+//    [self ha_addUsersDeviceToAllDevices];
     _compatibleDevices = [NSMutableDictionary new];
-    [self ha_addUsersDeviceToCompatibleDevices];
+//    [self ha_addUsersDeviceToCompatibleDevices];
 }
 
 #pragma mark - Capability Filtering
@@ -393,8 +393,8 @@
     }
 
     _compatibleDevices = [[NSMutableDictionary alloc] init];
-    [self ha_addUsersDeviceToCompatibleDevices];
-    
+//    [self ha_addUsersDeviceToCompatibleDevices];
+	
     NSArray *allDevices;
 
     @synchronized (_allDevices) { allDevices = [_allDevices allValues]; }
