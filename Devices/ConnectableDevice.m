@@ -212,10 +212,10 @@
 
 - (void) disconnect
 {
+	DLog();
     [_services enumerateKeysAndObjectsUsingBlock:^(id key, DeviceService *service, BOOL *stop)
     {
-        if (service.connected)
-            [service disconnect];
+		[service disconnect];
     }];
 
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kConnectSDKWirelessSSIDChanged object:nil];
@@ -225,14 +225,13 @@
 
 - (void) disconnectAndStopApplication
 {
+	DLog();
 	[_services enumerateKeysAndObjectsUsingBlock:^(id key, DeviceService *service, BOOL *stop)
 	 {
-		 if (service.connected) {
-			 if ([service respondsToSelector:@selector(disconnectAndTerminateApplication)]) {
-				 [service disconnectAndTerminateApplication];
-			 } else {
-				 [service disconnect];
-			 }
+		 if ([service respondsToSelector:@selector(disconnectAndTerminateApplication)]) {
+			 [service disconnectAndTerminateApplication];
+		 } else {
+			 [service disconnect];
 		 }
 	 }];
 	
