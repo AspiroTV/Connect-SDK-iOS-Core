@@ -59,6 +59,7 @@
         self.version = dict[@"version"];
         self.friendlyName = dict[@"friendlyName"];
 		self.castingName = dict[@"castingName"];
+		self.locationXML = dict[@"locationXML"];
         self.manufacturer = dict[@"manufacturer"];
         self.modelName = dict[@"modelName"];
         self.modelDescription = dict[@"modelDescription"];
@@ -84,6 +85,7 @@
     if (self.type) dictionary[@"type"] = self.type;
     if (self.version) dictionary[@"version"] = self.version;
     if (self.friendlyName) dictionary[@"friendlyName"] = self.friendlyName;
+	if (self.castingName) dictionary[@"castingName"] = self.castingName;
     if (self.manufacturer) dictionary[@"manufacturer"] = self.manufacturer;
     if (self.modelName) dictionary[@"modelName"] = self.modelName;
     if (self.modelDescription) dictionary[@"modelDescription"] = self.modelDescription;
