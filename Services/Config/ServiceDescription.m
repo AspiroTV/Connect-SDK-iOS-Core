@@ -30,7 +30,7 @@
     if (self)
     {
         self.address = address;
-        self.UUID = UUID;
+        self.UUID = [UUID stringByReplacingOccurrencesOfString:@"-" withString:@""];
         self.port = 0;
         self.lastDetection = [[NSDate date] timeIntervalSince1970];
     }
@@ -40,7 +40,7 @@
 
 + (instancetype)descriptionWithAddress:(NSString *)address UUID:(NSString*)UUID
 {
-    return [[ServiceDescription alloc] initWithAddress:address UUID:UUID];
+    return [[ServiceDescription alloc] initWithAddress:address UUID:[UUID stringByReplacingOccurrencesOfString:@"-" withString:@""]];
 }
 
 #pragma mark - JSONObjectCoding methods
