@@ -28,6 +28,7 @@
 #import "CastDiscoveryProvider.h"
 #import "SSDPDiscoveryProvider.h"
 #import "ZeroConfDiscoveryProvider.h"
+#import "SamsungDiscoveryProvider.h"
 
 #import "CastService.h"
 #import "AirPlayService.h"
@@ -35,6 +36,7 @@
 #import "WebOSTVService.h"
 #import "DLNAService.h"
 #import "NetcastTVService.h"
+#import "SamsungService.h"
 
 #import "ConnectableDevice.h"
 #import "DefaultConnectableDeviceStore.h"
@@ -200,6 +202,9 @@
         if ([[defaults valueForKeyPath:@"casting.webostv"] boolValue]) {
             [self registerDeviceService:[WebOSTVService class] withDiscovery:[SSDPDiscoveryProvider class]];
         }
+		if ([[defaults valueForKeyPath:@"casting.samsung"] boolValue]) {
+			[self registerDeviceService:[SamsungService class] withDiscovery:[SamsungDiscoveryProvider class]];
+		}
     } else {
 		NSDictionary *defaultPlatforms = kConnectSDKDefaultPlatforms;
 		
