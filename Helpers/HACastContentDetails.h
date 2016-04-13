@@ -23,6 +23,9 @@
 
 @property (nonatomic, copy, readonly) NSString *config;
 
+@property (nonatomic, copy) NSString *selectedAudio;
+@property (nonatomic, copy) NSString *selectedSubtitle;
+
 - (instancetype)initWithId:(NSString *)contentId
 					 title:(NSString *)contentTitle
 			   description:(NSString *)contentDescription
