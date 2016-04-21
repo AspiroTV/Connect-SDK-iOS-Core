@@ -210,6 +210,23 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(disconnect) name:kConnectSDKWirelessSSIDChanged object:nil];
 }
 
+- (void) reconnect
+{
+    if (self.connected)
+    {
+        dispatch_on_main(^{ [self.delegate connectableDeviceReady:self]; });
+    } else
+    {
+        [_services enumerateKeysAndObjectsUsingBlock:^(id key, DeviceService *service, BOOL *stop)
+         {
+             if (!service.connected)
+                 [service reconnect];
+         }];
+    }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(disconnect) name:kConnectSDKWirelessSSIDChanged object:nil];
+}
+
 - (void) disconnect
 {
     [_services enumerateKeysAndObjectsUsingBlock:^(id key, DeviceService *service, BOOL *stop)

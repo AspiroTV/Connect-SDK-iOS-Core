@@ -160,10 +160,13 @@ typedef enum {
 /*! Whether the DeviceService requires an active connection or registration process */
 @property (nonatomic, readonly) BOOL isConnectable;
 
+@property (nonatomic) BOOL isReconnect;
+
 /*!
  * Will attempt to connect to the DeviceService. The failure/success will be reported back to the DeviceServiceDelegate. If the connection attempt reveals that pairing is required, the DeviceServiceDelegate will also be notified in that event.
  */
 - (void) connect;
+- (void) reconnect;
 
 /*!
  * Will attempt to disconnect from the DeviceService. The failure/success will be reported back to the DeviceServiceDelegate.

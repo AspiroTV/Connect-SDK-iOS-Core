@@ -246,6 +246,7 @@ static BOOL _shouldDisconnectOnBackground = YES;
 }
 
 - (void) connect { }
+- (void) reconnect { }
 - (void) disconnect { }
 
 - (void) disconnectAndTerminateApplication { }

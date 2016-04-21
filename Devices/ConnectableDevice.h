@@ -103,6 +103,8 @@
  */
 - (void) connect;
 
+- (void) reconnect;
+
 /*! Enumerates through all DeviceServices and attempts to disconnect from each of them. */
 - (void) disconnect;
 - (void) disconnectAndStopApplication;
