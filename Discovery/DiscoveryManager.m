@@ -305,6 +305,10 @@
 
 - (void) startSSIDTimer
 {
+    if (_ssidTimer) {
+        [_ssidTimer invalidate];
+        _ssidTimer = nil;
+    }
     _ssidTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(detectSSIDChange) userInfo:nil repeats:YES];
     [_ssidTimer fire];
 }
