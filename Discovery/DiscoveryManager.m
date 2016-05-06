@@ -126,9 +126,7 @@
         _deviceClasses = [[NSMutableDictionary alloc] init];
 
         _allDevices = [[NSMutableDictionary alloc] init];
-//        [self ha_addUsersDeviceToAllDevices];
         _compatibleDevices = [[NSMutableDictionary alloc] init];
-//		[self ha_addUsersDeviceToCompatibleDevices];
 
         _appStateChangeNotifier = stateNotifier ?: [AppStateChangeNotifier new];
         __weak typeof(self) wself = self;
@@ -145,28 +143,6 @@
     }
     
     return self;
-}
-
-- (void)ha_addUsersDeviceToAllDevices {
-	NSString *deviceName = [[NSUserDefaults standardUserDefaults] objectForKey:@"deviceFriendlyName"];
-	
-    ServiceDescription *serviceDescription = [ServiceDescription descriptionWithAddress:@"kUsersDeviceAddress" UUID:@"kUsersDeviceID"];
-	serviceDescription.serviceId = @"kUsersDeviceServiceId";
-	serviceDescription.friendlyName = deviceName;
-	serviceDescription.castingName = @"device_cast";
-    serviceDescription.port = 0;
-    serviceDescription.manufacturer = @"Apple";
-    serviceDescription.modelName = [UIDevice currentDevice].model;
-    
-    ConnectableDevice *device;
-    device = [ConnectableDevice connectableDeviceWithDescription:serviceDescription];
-    @synchronized (_allDevices) { [_allDevices setObject:device forKey:serviceDescription.address]; }
-}
-
-- (void)ha_addUsersDeviceToCompatibleDevices {
-    ConnectableDevice *device;
-    @synchronized (_allDevices) { device = [_allDevices objectForKey:@"kUsersDeviceAddress"]; }
-    @synchronized (_compatibleDevices) { [_compatibleDevices setValue:device forKey:device.address]; }
 }
 
 #pragma mark - Setup & Registration
@@ -371,14 +347,16 @@
     }];
     
     [_discoveryProviders enumerateObjectsUsingBlock:^(DiscoveryProvider *provider, NSUInteger idx, BOOL *stop) {
-        [provider stopDiscovery];
-        [provider startDiscovery];
+        if ([provider isKindOfClass:[CastDiscoveryProvider class]]) {
+            //no need to restart discovery for chromecast
+        } else {
+            [provider stopDiscovery];
+            [provider startDiscovery];
+        }
     }];
 
-    _allDevices = [NSMutableDictionary new];
-//    [self ha_addUsersDeviceToAllDevices];
-    _compatibleDevices = [NSMutableDictionary new];
-//    [self ha_addUsersDeviceToCompatibleDevices];
+//    _allDevices = [NSMutableDictionary new]; //there is an issue when you are disabling wifi and after it
+//    _compatibleDevices = [NSMutableDictionary new]; //delegate doesnt known that cc device is went offline
 }
 
 #pragma mark - Capability Filtering
@@ -397,7 +375,6 @@
     }
 
     _compatibleDevices = [[NSMutableDictionary alloc] init];
-//    [self ha_addUsersDeviceToCompatibleDevices];
 	
     NSArray *allDevices;
 
