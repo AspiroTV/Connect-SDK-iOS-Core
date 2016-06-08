@@ -462,6 +462,26 @@
     }
 }
 
+- (void)deviceServiceConnectionSuccess:(DeviceService *)service mediaControl:(id<MediaControl>)mediaControl {
+	if (self.delegate && [self.delegate respondsToSelector:@selector(connectableDeviceConnectionSuccess:forService:)])
+		dispatch_on_main(^{ [self.delegate connectableDeviceConnectionSuccess:self forService:service]; });
+	
+	if (self.connected)
+	{
+		[[[DiscoveryManager sharedManager] deviceStore] addDevice:self];
+		
+		dispatch_on_main(^{
+			if ([self.delegate respondsToSelector:@selector(connectableDeviceReady:mediaControl:)]) {
+				[self.delegate connectableDeviceReady:self mediaControl:mediaControl];
+			} else {
+				[self.delegate connectableDeviceReady:self];
+			}
+		});
+		
+		self.lastConnected = [[NSDate date] timeIntervalSince1970];
+	}
+}
+
 - (void)deviceService:(DeviceService *)service didFailConnectWithError:(NSError *)error
 {
     if (self.delegate && [self.delegate respondsToSelector:@selector(connectableDevice:connectionFailedWithError:)])

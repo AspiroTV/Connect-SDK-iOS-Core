@@ -725,6 +725,8 @@
 
 - (void)connectableDeviceReady:(ConnectableDevice *)device { }
 
+- (void)connectableDeviceReady:(ConnectableDevice *)device mediaControl:(id<MediaControl>)mediaControl { }
+
 - (void)connectableDeviceDisconnected:(ConnectableDevice *)device withError:(NSError *)error { }
 
 #pragma mark - Device Store

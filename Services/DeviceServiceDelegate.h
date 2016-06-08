@@ -19,6 +19,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MediaControl.h"
 
 /*!
  * Type of pairing that is required by a particular DeviceService. This type will be passed along with the DeviceServiceDelegate deviceService:pairingRequiredOfType:withData: message.
@@ -66,6 +67,14 @@ typedef enum {
  * @param service DeviceService that was successfully connected
  */
 - (void) deviceServiceConnectionSuccess:(DeviceService*)service;
+
+/*!
+ * After the connection has been successfully established, and after pairing (if applicable), this method will be called.
+ *
+ * @param service DeviceService that was successfully connected
+ * @param mediaControl id<MediaControl> object from connected device
+ */
+- (void)deviceServiceConnectionSuccess:(DeviceService *)service mediaControl:(id<MediaControl>)mediaControl;
 
 /*!
  * There are situations in which a DeviceService will update the capabilities it supports and propagate these changes to the DeviceService. Such situations include:

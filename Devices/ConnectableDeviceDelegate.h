@@ -19,6 +19,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MediaControl.h"
 
 @class ConnectableDevice;
 @class DeviceService;
@@ -38,6 +39,14 @@
  * @param device ConnectableDevice that is ready for commands.
  */
 - (void) connectableDeviceReady:(ConnectableDevice *)device;
+
+/*!
+ * A ConnectableDevice sends out a ready message when all of its connectable DeviceServices have been connected and are ready to receive commands.
+ *
+ * @param device ConnectableDevice that is ready for commands.
+ * @param mediaControl id<MediaControl> object from connected device
+ */
+- (void)connectableDeviceReady:(ConnectableDevice *)device mediaControl:(id<MediaControl>)mediaControl;
 
 /*!
  * When all of a ConnectableDevice's DeviceServices have become disconnected, the disconnected message is sent.

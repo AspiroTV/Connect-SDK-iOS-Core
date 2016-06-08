@@ -79,7 +79,7 @@ typedef NS_ENUM(NSInteger, MediaControlIdleReason) {
  * @param playState Play state of the current media file
  */
 typedef void (^ MediaPlayStateSuccessBlock)(MediaControlPlayState playState);
-typedef void (^ MediaPlayStateWithReasonSuccessBlock)(MediaControlPlayState playState, MediaControlIdleReason idleReason);
+typedef void (^ MediaPlayStateWithReasonSuccessBlock)(MediaControlPlayState playState, MediaControlIdleReason idleReason, id mediaInformation);
 
 /*!
  * Success block that is called upon successfully getting the media file's current playhead position.
