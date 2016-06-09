@@ -26,6 +26,10 @@
 @property (nonatomic, copy) NSString *selectedAudio;
 @property (nonatomic, copy) NSString *selectedSubtitle;
 
+@property (nonatomic, copy) NSString *isFFWDisabled;
+@property (nonatomic, copy) NSString *isTimeshift;
+@property (nonatomic, copy) NSString *isLive;
+
 - (instancetype)initWithId:(NSString *)contentId
 					 title:(NSString *)contentTitle
 			   description:(NSString *)contentDescription
