@@ -547,7 +547,14 @@
         _searching = NO;
         _shouldResumeSearch = YES;
 
-        [self.discoveryProviders makeObjectsPerformSelector:@selector(pauseDiscovery)];
+        [self.discoveryProviders enumerateObjectsUsingBlock:^(DiscoveryProvider *provider, NSUInteger idx, BOOL *stop) {
+            if ([provider isKindOfClass:[CastDiscoveryProvider class]]) {
+                //no need to pause discovery for chromecast
+            } else {
+                [provider pauseDiscovery];
+            }
+        }];
+        
     }
 }
 
