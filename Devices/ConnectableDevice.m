@@ -414,6 +414,9 @@
 	
 	if (serviceDescription.castingName)
 		_consolidatedServiceDescription.castingName = serviceDescription.castingName;
+	
+	if (serviceDescription.locationXML)
+		_consolidatedServiceDescription.locationXML = serviceDescription.locationXML;
 
     if (serviceDescription.modelName)
         _consolidatedServiceDescription.modelName = serviceDescription.modelName;
