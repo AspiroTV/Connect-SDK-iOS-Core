@@ -26,17 +26,21 @@
 #import "ConnectSDKDefaultPlatforms.h"
 
 #import "CastDiscoveryProvider.h"
-#import "OrangeCastDiscoveryProvider.h"
 #import "SSDPDiscoveryProvider.h"
 #import "ZeroConfDiscoveryProvider.h"
+#if defined(ORANGECAST)
+    #import "OrangeCastDiscoveryProvider.h"
+#endif
 
 #import "CastService.h"
-#import "OrangeCastService.h"
 #import "AirPlayService.h"
 #import "RokuService.h"
 #import "WebOSTVService.h"
 #import "DLNAService.h"
 #import "NetcastTVService.h"
+#if defined(ORANGECAST)
+    #import "OrangeCastService.h"
+#endif
 
 #import "ConnectableDevice.h"
 #import "DefaultConnectableDeviceStore.h"
@@ -157,9 +161,11 @@
         if ([[defaults valueForKeyPath:@"casting.chromecast"] boolValue]) {
             [self registerDeviceService:[CastService class] withDiscovery:[CastDiscoveryProvider class]];
         }
+#if defined(ORANGECAST)
 		if ([[defaults valueForKeyPath:@"casting.orangecast"] boolValue]) {
 			[self registerDeviceService:[OrangeCastService class] withDiscovery:[OrangeCastDiscoveryProvider class]];
 		}
+#endif
         if ([[defaults valueForKeyPath:@"casting.airties"] boolValue]) {
 //            [self registerDeviceService:[AirTiesService class] withDiscovery:[SSDPDiscoveryProvider class]];
         }
