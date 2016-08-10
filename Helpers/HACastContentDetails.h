@@ -30,6 +30,8 @@
 @property (nonatomic, copy) NSString *isTimeshift;
 @property (nonatomic, copy) NSString *isLive;
 
+@property (nonatomic, copy) NSString *deviceId;
+
 - (instancetype)initWithId:(NSString *)contentId
 					 title:(NSString *)contentTitle
 			   description:(NSString *)contentDescription
