@@ -358,8 +358,12 @@
     }];
     
     [_discoveryProviders enumerateObjectsUsingBlock:^(DiscoveryProvider *provider, NSUInteger idx, BOOL *stop) {
-        if ([provider isKindOfClass:[CastDiscoveryProvider class]]) {
-            //no need to restart discovery for chromecast
+        if ([provider isKindOfClass:[CastDiscoveryProvider class]]
+#if defined(ORANGECAST)
+            || [provider isKindOfClass:[OrangeCastDiscoveryProvider class]]
+#endif
+            ) {
+            //no need to restart discovery for chromecast and orangecast
         } else {
             [provider stopDiscovery];
             [provider startDiscovery];
@@ -559,8 +563,12 @@
         _shouldResumeSearch = YES;
 
         [self.discoveryProviders enumerateObjectsUsingBlock:^(DiscoveryProvider *provider, NSUInteger idx, BOOL *stop) {
-            if ([provider isKindOfClass:[CastDiscoveryProvider class]]) {
-                //no need to pause discovery for chromecast
+            if ([provider isKindOfClass:[CastDiscoveryProvider class]]
+#if defined(ORANGECAST)
+                || [provider isKindOfClass:[OrangeCastDiscoveryProvider class]]
+#endif
+                ) {
+                //no need to pause discovery for chromecast and orangecast
             } else {
                 [provider pauseDiscovery];
             }
