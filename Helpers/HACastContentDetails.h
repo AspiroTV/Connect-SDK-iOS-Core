@@ -23,6 +23,9 @@
 
 @property (nonatomic, copy, readonly) NSString *config;
 
+@property (nonatomic, copy, readonly) NSString *channelAlias;
+@property (nonatomic, copy, readonly) NSString *channelPrograms;
+
 - (instancetype)initWithId:(NSString *)contentId
 					 title:(NSString *)contentTitle
 			   description:(NSString *)contentDescription
@@ -32,6 +35,8 @@
 				 sessionId:(NSString *)sessionId
 				  username:(NSString *)encryptedUsername
 				  password:(NSString *)encryptedPassword
-					config:(NSString *)config;
+                    config:(NSString *)config
+              channelAlias:(NSString *)channelAlias
+           channelPrograms:(NSString *)channelPrograms;
 
 @end

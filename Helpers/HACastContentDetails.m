@@ -23,6 +23,9 @@
 
 @property (nonatomic, copy, readwrite) NSString *config;
 
+@property (nonatomic, copy, readwrite) NSString *channelAlias;
+@property (nonatomic, copy, readwrite) NSString *channelPrograms;
+
 @end
 
 @implementation HACastContentDetails
@@ -36,7 +39,9 @@
 				 sessionId:(NSString *)sessionId
 				  username:(NSString *)encryptedUsername
 				  password:(NSString *)encryptedPassword
-					config:(NSString *)config {
+					config:(NSString *)config
+              channelAlias:(NSString *)channelAlias
+           channelPrograms:(NSString *)channelPrograms {
 	self = [super init];
 	if (self) {
 		_contentId = contentId;
@@ -49,6 +54,8 @@
 		_encryptedUsername = encryptedUsername;
 		_encryptedPassword = encryptedPassword;
 		_config = config;
+        _channelAlias = channelAlias;
+        _channelPrograms = channelPrograms;
 	}
 	return self;
 }
