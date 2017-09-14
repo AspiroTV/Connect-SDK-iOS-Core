@@ -31,6 +31,8 @@
 @property (nonatomic, copy) NSString *isLive;
 
 @property (nonatomic, copy) NSString *deviceId;
+@property (nonatomic, copy) NSString *programData;
+@property (nonatomic, copy) NSString *contentType;
 
 - (instancetype)initWithId:(NSString *)contentId
 					 title:(NSString *)contentTitle
