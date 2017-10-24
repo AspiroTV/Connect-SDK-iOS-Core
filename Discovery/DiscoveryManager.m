@@ -25,21 +25,25 @@
 
 #import "ConnectSDKDefaultPlatforms.h"
 
+#if defined(CHROMECAST)
 #import "CastDiscoveryProvider.h"
+#endif
 #import "SSDPDiscoveryProvider.h"
 #import "ZeroConfDiscoveryProvider.h"
 #if defined(ORANGECAST)
-    #import "OrangeCastDiscoveryProvider.h"
+#import "OrangeCastDiscoveryProvider.h"
 #endif
 
+#if defined(CHROMECAST)
 #import "CastService.h"
+#endif
 #import "AirPlayService.h"
 #import "RokuService.h"
 #import "WebOSTVService.h"
 #import "DLNAService.h"
 #import "NetcastTVService.h"
 #if defined(ORANGECAST)
-    #import "OrangeCastService.h"
+#import "OrangeCastService.h"
 #endif
 
 #import "ConnectableDevice.h"
@@ -158,9 +162,11 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSDictionary *filter = [defaults objectForKey:@"casting"];
     if (filter) {
+#if defined(CHROMECAST)
         if ([[defaults valueForKeyPath:@"casting.chromecast"] boolValue]) {
             [self registerDeviceService:[CastService class] withDiscovery:[CastDiscoveryProvider class]];
         }
+#endif
 #if defined(ORANGECAST)
 		if ([[defaults valueForKeyPath:@"casting.orangecast"] boolValue]) {
 			[self registerDeviceService:[OrangeCastService class] withDiscovery:[OrangeCastDiscoveryProvider class]];
@@ -358,10 +364,8 @@
     }];
     
     [_discoveryProviders enumerateObjectsUsingBlock:^(DiscoveryProvider *provider, NSUInteger idx, BOOL *stop) {
-        if ([provider isKindOfClass:[CastDiscoveryProvider class]]
-#if defined(ORANGECAST)
-            || [provider isKindOfClass:[OrangeCastDiscoveryProvider class]]
-#endif
+        if ([provider isKindOfClass:NSClassFromString(@"CastDiscoveryProvider")]
+            || [provider isKindOfClass:NSClassFromString(@"OrangeCastDiscoveryProvider")]
             ) {
             //no need to restart discovery for chromecast and orangecast
         } else {
@@ -563,10 +567,8 @@
         _shouldResumeSearch = YES;
 
         [self.discoveryProviders enumerateObjectsUsingBlock:^(DiscoveryProvider *provider, NSUInteger idx, BOOL *stop) {
-            if ([provider isKindOfClass:[CastDiscoveryProvider class]]
-#if defined(ORANGECAST)
-                || [provider isKindOfClass:[OrangeCastDiscoveryProvider class]]
-#endif
+            if ([provider isKindOfClass:NSClassFromString(@"CastDiscoveryProvider")]
+                || [provider isKindOfClass:NSClassFromString(@"OrangeCastDiscoveryProvider")]
                 ) {
                 //no need to pause discovery for chromecast and orangecast
             } else {
